@@ -1,0 +1,13 @@
+= Part I: live CD -- partitioning -- create a table on a disk
+
+This operation erases everything on the disk: all partitions previously there are deleted
+Skip this step if you want to keep what is currently on this disk
+
+Execute either of those:
+
+    (parted) mklabel gpt      # if you want a GPT disk table
+    (parted) mklabel msdos    # if you want an msdos disk table
+
+Checking
+
+    (parted) print free

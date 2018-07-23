@@ -1,0 +1,26 @@
+= Part I: live CD -- partitioning
+
+Using parted
+
+== Useful to know
+
+    (parted) help somecommand     # displays a lot of useful info
+
+Incase you need to recuperate some lost partitions after a mistake
+
+    $ pacman -Sy testdisk
+    $ testdisk
+
+== Assessing
+
+The disks and their partitions
+
+    $ ls /dev/sd*     # what disks?
+    $ fdisk -l /dev/sda      # what partitions already exist?
+    $ blkid     # idem
+    $ parted /dev/sda unit GiB print free     # idem
+
+Enter the parted program, which then uses its own prompt
+
+    $ parted /dev/sda
+    (parted) unit MiB        # set up the default unit for display and input

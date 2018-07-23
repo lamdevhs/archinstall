@@ -1,0 +1,36 @@
+= Part I: live CD -- partitioning -- create filesystems of new partitions
+
+== Find partition numbers
+
+Any of those
+
+    $ fdisk -l /dev/sda      # what partitions already exist?
+    $ blkid     # idem
+    $ parted /dev/sda unit GiB print free     # idem
+
+== For the Boot partition
+
+    $ mkfs.fat -F32 /dev/sda1
+
+== For any ext4 partition
+
+    $ mkfs.ext4 /dev/sda2
+
+== For any swap partition
+
+    $ mkswap /dev/sda3
+
+== Name partitions
+
+If GPT:
+
+    $ parted /dev/sda name 2 myArchSys   # 2 is the partition number
+
+If msdos, for ext2/ext3/ext4 partitions:
+
+    $ e2label /dev/sda3 "myThirdPart"
+    $ e2label /dev/sda4 "myFourthPart"
+
+== Checking
+
+Same as always

@@ -1,0 +1,42 @@
+= Part I: live CD -- start
+
+You've booted on the Arch live CD and you're at the root prompt.
+Fight troll [y/N]?
+
+== Useful to know
+
+To scroll up/down the console screen: shift + pageup, shift + pagedown
+To switch to another console: alt + leftarrow, alt + rightarrow
+/!\ Warning: switching to another console erases the scrolling history of the current console
+
+== Setting up the environment
+
+Keyboard layout
+----
+$ ls /usr/share/kbd/keymaps/**/*.map.gz
+$ loadkeys fr
+----
+Check you have an internet connection
+
+    $ pacman -Syy
+
+If you don't because of some website authentification page, use `elinks`
+
+Better console font family
+
+    $ pacman -Sy terminus-font
+    $ pacman -Ql terminus-font    # list available fonts
+    $ setfont ter-v24n
+
+== Assessing
+
+Bootloader: EFI/GPT or BIOS/msdos? check if the following path exists:
+
+    $ ls /sys/firmware/efi/efivars
+
+if not, your BIOS doesn't support EFI/GPT-based bootloading.
+
+== Useful to have
+
+    $ pacman -Sy testdisk     # to recuperate lost partitions, just in case
+    $ pacman -Sy vim          # probably already installed
