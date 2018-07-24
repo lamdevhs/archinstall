@@ -23,4 +23,13 @@ msdos/BIOS version:
     $ pacstrap /mnt base grub-bios $LIST
 
 Total download+installation time for a 250kb/s internet connection: appr. 20-30min.
-I know, my internet connection sucks.
+
+Edit: apparently doesn't work, $LIST doesn't get replaced as several arguments.
+Is it a special behavior of zsh?
+Alternative that seems to work:
+
+    $ pacstrap /mnt base grub-bios `echo $LIST`
+
+== Checking
+
+    $ ls /mnt

@@ -3,14 +3,14 @@
 The command that generates the fstab file for the new system
 is genfstab.
 
-Before generation /mnt/etc/fstab, it may be useful to mount
+Before generating /mnt/etc/fstab, it may be useful to mount
 all the partitions you'll want automatically mounted everytime
 you'll boot onto your new system, in various mounting points
 anywhere inside /mnt (which represents your future root '/' filesystem).
 
 Especially, you'll want to swapon any swap partition you'll want automatically
-swapped on by your new system.
-TODO: check if this actually works
+swapped on by your new system. If it is on when you use genfstab, it'll be
+added to /mnt/etc/fstab.
 
 Generate the file:
 

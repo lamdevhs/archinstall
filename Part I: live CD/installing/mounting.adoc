@@ -25,3 +25,4 @@ Check the efi flag of the boot partition: ok if this path exists
 == Check everything
 
     $ lsblk
+    $ ls /mnt

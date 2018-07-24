@@ -12,6 +12,8 @@ Part I: live CD
   installing/
     mounting
     pacman (live CD configuration)
+    pacstrap
+    fstab
   #CHECKPOINT
 
   

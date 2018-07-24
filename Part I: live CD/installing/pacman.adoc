@@ -3,6 +3,7 @@
 The installation of the new system in /mnt is going to download
 all the required packages from the internet. So we have to get the best
 mirrorlist possible.
+/!\ archlinux .ORG -- not .COM!
 
     $ MLIST='www.archlinux.org/mirrorlist/?country=FR&protocol=http&protocol=https&ip_version=4'
     $ wget "$MLIST"    # creates a new file called index?<stuff>

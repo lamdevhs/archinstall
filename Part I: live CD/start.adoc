@@ -16,7 +16,7 @@ Keyboard layout
 $ ls /usr/share/kbd/keymaps/**/*.map.gz
 $ loadkeys fr
 ----
-Check you have an internet connection
+Check if you have an internet connection
 
     $ pacman -Syy
 
@@ -38,5 +38,6 @@ if not, your BIOS doesn't support EFI/GPT-based bootloading.
 
 == Useful to have
 
-    $ pacman -Sy testdisk     # to recuperate lost partitions, just in case
-    $ pacman -Sy vim          # probably already installed
+    $ pacman -S vim          # probably already installed
+    $ pacman -S ranger
+    $ EDITOR=vim
