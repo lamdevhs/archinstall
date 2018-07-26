@@ -1,0 +1,68 @@
+= Part II: first boot -- 6-xorg
+
+== VIDEO DRIVER
+
+to search for graphical card:
+
+    $ lspci -k | grep -i "VGA"
+
+search for the name of the package in list:
+
+    $ pacman -Ss xf86-video
+    $ pacman -S xf86-video-intel   # if you have an intel graphical card
+
+for virtualbox cf virtualbox.adoc regarding guest-utils; also don't forget to set up "system/pointing device" to PS/2 in virtualbox settings, before trying on xorg.
+
+
+
+== INSTALL XORG
+
+better be sure your system is perfectly upgraded before trying to add xorg. then:
+
+    $ pacman -S xorg-server xorg-xinit
+    $ pacman -S xorg-apps   # optional but very useful
+
+as normal user, you then need to copy:
+----
+    $ cp /etc/X11/xinit/xinitrc ~/.xinitrc
+----
+as a template to create your own personalized xorg session, with a DE or WM etc.
+once it is done, you can then start xorg using the simple command (as normal user)
+
+    $ startx
+
+
+
+== XINITRC
+
+=== DEFAULT XINITRC
+
+to test xorg with the default xinitrc, you need to install:
+
+    $ pacman -S xorg-{twm,xclock} xterm
+    $ startx
+
+by default, the keyboard layout will be US; use Ctrl-D to kill all the terminals in order to close the xorg session and get back to your console.
+
+=== MUST-HAVE XINITRC
+
+to set up a keyboard layout for xorg, and to change the default cursor to a more traditional arrowhead shape, add
+----
+    setxkbmap fr
+    xsetroot -cursor_name left_ptr
+----
+before the line which starts with 'exec ...' (which should be the last line of the script).
+the second line requires the package xorg-xsetroot, which happens to be part of the group xorg-apps.
+
+the 'exec ...' line in xinitrc implies that the xorg server will live and die with whatever command follows 'exec'. So if you want to kill xorg along your window manager (eg xmonad), you can use
+
+    exec xmonad
+
+as the last line of the file. when you use startx, it'll launch xmonad, along with whatever other commands listed beforehand (use ampersands), and once you quit xmonad, xorg will die along with it, bringing you back to the console.
+
+
+
+== GUI PACKAGES
+
+firefox: when asked during installation about libx264, choose NOT 10bit (default)
+

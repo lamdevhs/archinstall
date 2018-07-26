@@ -1,0 +1,131 @@
+= Part I: live CD -- 3-install
+
+== MOUNTING
+
+We must mount the partitions on which we'll install the new arch system, so they can be read and written on.
+
+=== Mount the main filesystem '/' partition on the folder /mnt
+
+    $ mount /dev/sda2 /mnt
+    $ mount -L <label> /mnt # alternatively
+
+=== If you have an EFI boot partition:
+
+    $ mkdir /mnt/boot
+    $ mount /dev/sda1 /mnt/boot
+
+Assuming /dev/sda1 is the EFI boot partition
+
+Check the efi flag of the boot partition: ok if this path exists
+
+    $ ls /mnt/boot/EFI
+
+=== Mount the swap partition
+
+before installing:
+
+    $ swapon /dev/sda3
+    $ swapon -L myswap   # alternative with label
+
+better safe than sorry
+
+=== Check everything
+
+    $ lsblk
+    $ ls /mnt
+
+
+
+== PACMAN
+
+The installation of the new system in /mnt is going to download
+all the required packages from the internet. So we have to get the best
+mirrorlist possible.
+/!\ archlinux .ORG -- not .COM!
+
+    $ MLIST='www.archlinux.org/mirrorlist/?country=FR&protocol=http&protocol=https&ip_version=4'
+    $ wget -O my-mirror-list "$MLIST"    # creates a new file called index?<stuff>
+    $ head my-mirror-list     # check content
+    $ mv my-mirror-list /etc/pacman.d/mirrorlist
+
+Then uncomment some (all?) of the mirror links in the list:
+
+    $ vim /etc/pacman.d/mirrorlist
+
+or alternately:
+----
+    $ sed 's/^#//g' my-mirror-list > /etc/pacman.d/mirrorlist
+----
+
+
+
+== PACSTRAP
+
+This is the command that installs the most basic archlinux system.
+You can also asks it to install other additional packages that you might
+need in your future system, especially those which you'll need right away
+when configuring it for the first time.
+
+=== Display options
+
+To get total percentage of download progress during pacstrap installation, and a much prettier
+display, uncomment the two lines:
+
+    $ vim /etc/pacman.conf
+    Color
+    TotalDownload
+
+=== List of useful packages to optionally install
+
+    $ LIST="vim terminus-font ranger elinks lynx"
+
+elinks and/or lynx are especially needed incase your internet access requires to log in to some website after rebooting to your new system. better have both if you're a little paranoid
+
+=== Install Arch linux on your new system in /mnt
+
+EFI version:
+
+    $ pacstrap /mnt base grub-efi-x86_64 efibootmgr $LIST
+
+msdos/BIOS version:
+
+    $ pacstrap /mnt base grub-bios $LIST
+
+Total download+installation time for a 250kb/s internet connection: appr. 20-30min.
+
+Edit: apparently doesn't work, $LIST doesn't get replaced as several arguments.
+Is it a special behavior of zsh?
+Alternative that seems to work:
+
+    $ pacstrap /mnt base grub-bios `echo $LIST`
+
+=== Checking
+
+    $ ls /mnt
+
+
+
+== FSTAB
+
+The command that generates the fstab file for the new system
+is genfstab.
+
+Before generating /mnt/etc/fstab, it may be useful to mount
+all the partitions you'll want automatically mounted everytime
+you'll boot onto your new system, in various mounting points
+anywhere inside /mnt (which represents your future root '/' filesystem).
+
+Especially, you'll want to swapon any swap partition you'll want automatically
+swapped on by your new system. If it is on when you use genfstab, it'll be
+added to /mnt/etc/fstab.
+
+=== Generate etc/fstab
+
+    $ genfstab -Up /mnt >> /mnt/etc/fstab
+    $ cat /mnt/etc/fstab   # check its content
+
+if you have to manually add a swap partition:
+
+    $ vim /etc/fstab
+    # <UUID> <mounting point> <fs> <options> <...> <...>
+    UUID=1234-5674  none  swap  sw  0  0

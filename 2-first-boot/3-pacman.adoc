@@ -1,0 +1,59 @@
+= Part II: first boot -- 2-pacman
+
+Where you set up basic options for pacman and upgrade your system.
+You better have checked you had a viable and unblocked internet connection beforehand.
+
+
+== CONF
+
+    $ vim /etc/pacman.conf
+
+uncomment the [multilib] lines (not those of testing) to get access to 32bit apps on your 64bit machine; you may also want to uncomment
+
+    Color
+    TotalDownload   # gives out total ETA and progress% during downloading
+
+
+== SYNC
+
+it's important your clocks be all good and well on time, otherwise you may get some weird errors during synchronizing, because packages and so on use dates a lot for signatures and so on; if you clock thinks we're in the future, it could cause problems.
+
+check internet connection, and read potential recommendations for the upgrade you'll attempt:
+
+    $ elinks www.archlinux.org
+
+refresh database and upgrade/downgrade system to match it accordingly
+
+    pacman -Syyuu
+
+better do it at least once a week, esp when you know you'll have at worst a day to fix the potential problems that may arise (friday evening/saturday morning perhaps)
+
+
+== CHEATSHEET
+
+install
+
+    $ pacman -S xxxx
+
+update database && upgrade system (always together)
+
+    elinks www.archlinux.org    # check out news
+    $ pacman -Syu
+
+fully refresh database + upgrade/downgrade system accordingly
+do it esp if you modify /etc/pacman.d/mirrorlist
+
+    elinks www.archlinux.org    # check out news
+    $ pacman -Syyuu
+
+get info on a package, esp, the optional dependecies
+
+    $ pacman -Si xxxx
+    $ pacman -Qi xxxx   # if the package is already installed
+
+the latter command tells you which optional dependencies are already installed on your machine
+
+find some package
+
+    $ pacman -Ss xxxx   # will tell you if installed
+    $ pacman -Qs xxxx   # works if already installed

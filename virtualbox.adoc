@@ -1,0 +1,57 @@
+= Specific instructions when using virtualbox
+
+== Pointing device
+
+Before booting in a system, live or otherwise, choose in settings/system/pointing device the appropriate one:
+- if you use xorg, go for PS/2 Mouse
+- if not, using USB tablet will preven the console from uselessly capturing your mouse (requiring the use of the vbox mod key to escape from it)
+
+
+== EFI booting problems
+
+When rebooting on a newly created system with an EFI/gpt partitioning type (after the live CD session), virtualbox may fail to work, leaving you in a UEFI interactive shell. Its keyboard will be US. Two ways to deal with it:
+
+the temporary solution: to boot once on your new system, type
+
+    Shell> fs0:efi\xxxx\grubx64.efi
+
+/!\ the antislash of qwerty is on the [µ] key
+case-insensitive, xxxx is the --bootloader-id you gave to grub-install (usually is 'grub'), and it may be tab-completed (not the name of the .efi file though).
+
+the long-term solution: to make virtualbox boot automatically on your new system, type
+
+    Shell> edit startup.nsh
+    \EFI\grub\grubx64.efi
+
+Ctrl+E to get help, Ctrl+W to exit help, Ctrl+S to save file, Ctrl+Q to quit editor. WARNING: US keyboard!!!
+This will create a file /boot/startup.nsh which will be used by virtualbox to boot properly.
+Alternatively, you can create the file from inside the live CD, before rebooting:
+
+    $ echo '\EFI\grub\grubx64.efi' > /mnt/boot/startup.nsh
+
+
+== Shared Folder
+
+within your new system: you need to have enabled virtualbox-guest-utils(-modules-arch). then you create/edit
+
+    $ vim /etc/modules-load.d/virtualbox.conf
+    vboxguest
+    vboxsf
+    vboxvideo
+    $ reboot
+
+to manually mount
+
+
+    $ mkdir /mnt/shared
+    $ mount -t vboxsf name_of_shared_folder /mnt/shared
+
+to add an entry for it to fstab, you need the options used to mount it:
+
+    $ mount                   # or mount -l
+    $ findmnt | grep shared   # better alternative
+
+
+== Remarks
+
+- ping often doesn work in a vm even when you have an internet connection working from within it

@@ -1,6 +1,6 @@
-= Part I: live CD -- start
+= Part I: live CD -- 1-start
 
-You've booted on the Arch live CD and you're at the root prompt.
+You've booted into the Arch live CD and you're at the root prompt.
 Fight troll [y/N]?
 
 == Useful to know
@@ -18,13 +18,15 @@ $ loadkeys fr
 ----
 Check if you have an internet connection
 
-    $ pacman -Syy
+    $ pacman -Sy
+    $ ping www.archlinux.org # an alternative if you're not in a VM, also:
+    $ wget -O >(cat) -o /dev/null www.archlinux.org | less
 
 If you don't because of some website authentification page, use `elinks`
 
 Better console font family
 
-    $ pacman -Sy terminus-font
+    $ pacman -S terminus-font
     $ pacman -Ql terminus-font    # list available fonts
     $ setfont ter-v24n
 

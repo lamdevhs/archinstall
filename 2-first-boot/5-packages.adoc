@@ -1,0 +1,64 @@
+= Part II: first boot -- 5-packages
+
+Where we install basic useful tools.
+
+
+== SOUND
+
+    $ pacman -S alsa-utils
+
+as user:
+
+    login: myuser
+    $ alsamixer
+
+F6 to select the sound card, Esc to exit, arrow keys to select and modify. try to put everything to "dB gain: 0.0"
+
+If one day you can't play some music, here are some codecs you may try to install. You're still better off waiting for actually needing them. Try perhaps to install vlc before especially, as it ships with many codecs.
+
+    $ pacman -S gstreamer
+    $ pacman -S gst-plugins-{backend,base,base-libs,good,ugly,espeak}
+    $ pacman -S lame faad2 flac gstreamer lib{dca,dv,dvdcss,dvdread,dvdnav,mad,mpeg2,theora,vorbis,xv}
+
+main source: https://www.youtube.com/watch?v=6IjdRr1WMSU
+
+
+== BASIC TERMINAL TOOLS
+
+log back to root.
+
+packages already previously installed:
+
+    $ pacman -S vim terminus-font ranger elinks lynx
+    $ pacman -S sudo
+    $ pacman -S alsa-utils
+
+basic very useful command line tools:
+
+    $ pacman -S wget tree
+
+very useful for recovery/disk maintenance:
+
+    $ pacman -S parted testdisk
+
+terminal software:
+
+    $ pacman -S cmus  # music player
+
+/!\ in general it fails to start at first.
+
+
+== CMUS (WIP)
+
+=== VM
+
+- after installing it: can be launched as normal user but can't see any mp3 music when exploring (tab 5)
+- pacman -Qi says we need libmad for mp3
+- after installing libmad: the mp3 files become visible, and we can actually play them, both as normal user and root user
+- libmad is one of the dependencies of vlc
+
+=== HARD DISK
+- without libmad, mp3 aren't visible, like in vm. we get a warning error at startup that disappears once we download libmad
+but we still can't play music: we in fact require libpulse, which is one of the optional dependencies:
+                  libpulse: for PulseAudio output plugin support
+and yet it's not enough...

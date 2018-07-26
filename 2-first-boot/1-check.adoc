@@ -1,0 +1,50 @@
+= Part II: first boot -- 1-check
+
+Check eveything is as you wanted. If some things aren't right, try to read next step 2-troubleshooting.
+
+The first things you find out about are:
+- grub menu entries
+- root passwd
+- keyboard layout
+- console font
+
+
+== GRUB: useful
+
+to halt/reboot computer from grub: type 'c' to get command line mode, then type 'halt' or 'reboot' (US keyboard)
+
+
+== FSTAB
+
+what is mounted, where? including swap
+
+    $ lsblk
+    $ free --mega
+
+is swap available?
+
+
+== TIMEZONE, LOCALE, HOSTNAME
+
+    $ date    # what time is it, dear?
+    $ locale
+    $ hostnamectl   # very useful command
+
+    $ timedatectl
+
+if the output is correct (see 2-troubleshooting), use
+
+    $ hwclock --systohc
+
+to copy the system clock onto the hardware clock (provided the system clock is valid) and to generate this file:
+
+    $ cat /etc/adjtime
+
+
+== NETWORKING
+
+    $ elinks www.archlinux.org      # got the internet?
+    $ ip link                       # is <dev> UP?
+    $ pidof dhcpcd
+    $ systemctl status dhcpcd@<dev> # service active?
+    $ systemctl status dhcpcd@<dev>
