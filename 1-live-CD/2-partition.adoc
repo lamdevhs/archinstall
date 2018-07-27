@@ -3,31 +3,33 @@
 Using parted
 
 
-
 == START
 
 === Useful to know
 
     (parted) help somecommand     # displays a lot of useful info
 
-Incase you need to recuperate some lost partitions after a mistake
+Incase you need to recuperate some lost partitions after a mistake:
 
     $ pacman -S testdisk
-    $ testdisk
 
 === Assessing
 
 The disks and their partitions
 
     $ ls /dev/sd*     # what disks?
-    $ fdisk -l /dev/sda      # what partitions already exist?
-    $ blkid     # idem
-    $ parted /dev/sda unit GiB print free     # idem
+
+From then on <disk> will represent the device file of the disk on which you'll install the new arch system, eg /dev/sda.
+to find what partitions already exist on it:
+
+    $ fdisk -l <disk>
+    $ blkid
+    $ parted <disk> unit GiB print free     # idem
 
 Enter the parted program, which then uses its own prompt
 
-    $ parted /dev/sda
-    (parted) unit MiB        # set up the default unit for display and input
+    $ parted <disk>
+    (parted) unit MiB    # set display/input unit
 
 
 
@@ -38,8 +40,8 @@ Skip this step if you want to keep the partitions you may have currently on this
 
 Execute either of those:
 
-    (parted) mklabel gpt      # if you want a GPT disk table
-    (parted) mklabel msdos    # if you want an msdos disk table
+    (parted) mklabel gpt      # for a GPT disk table
+    (parted) mklabel msdos    # for a msdos disk table
 
 Checking
 
@@ -54,15 +56,18 @@ Create EFI sys partition (ESP) at the start of the disk.
 Must be 550MiB in size.
 
     (parted) mkpart ESP fat32 1MiB 551MiB
-    (parted) print free     # get the number of the new partition
 
-Check the new partition (here number 1) is properly aligned
+To get the number of the newly created partition:
 
-    (parted) align-check optimal 1
+    (parted) print free
+
+Let [boot] be the number of the boot partition. Check whether it is properly aligned:
+
+    (parted) align-check optimal [boot]
 
 Set flags 'boot,esp' on that partition, to mark it as the EFI boot partition
 
-    (parted) set 1 esp on
+    (parted) set [boot] esp on
 
 
 
@@ -70,36 +75,35 @@ Set flags 'boot,esp' on that partition, to mark it as the EFI boot partition
 
 === To create a partition for the main filesystem '/'
 
-If msdos: 'primary' for the three first, 'extended' for the last one,
-'logical' for all the ones you put in the 'extended' one.
-This to work around the fact that msdos tables don't handle more than 4
-partitions on one disk.
+If msdos: 'primary' for the three first, 'extended' for the last one, 'logical' for all the ones you put in the 'extended' one.
 If GPT: always 'primary' for as many partitions as you like.
 
-    (parted) print free      # check out available and location of free space
-    (parted) mkpart primary ext4 551MiB 19000MiB    # example
-    (parted) print free      # get partition number, let's say 2
+    (parted) print free      # check out the area
+    (parted) mkpart primary ext4 551MiB 19000MiB
+    (parted) print free
 
-Checking
+Let [root] be this new root partition's number.
 
-    (parted) align-check optimal 2
+    (parted) align-check optimal [root]
 
 If BIOS/msdos:
 
-    (parted) set 2 boot on    # make it bootable (here partition 2)
+    (parted) set [root] boot on
     (parted) print free       # Checking
 
 === To create a swap partition
 
 Skip if one already exists somewhere else.
-Best size: 50-150% of real RAM size.
+Best size for the partition: 1/2 to 2 times the size of real RAM.
 
     (parted) mkpart primary linux-swap 19000MiB 100%
     (parted) print free
-    (parted) align-check optimal 1
 
-Using percentages like 0% and 100% allows parted to choose the best alignment
-for the start or end of a partition.
+Let [swap] be the number of the swap partition.
+
+    (parted) align-check optimal [swap]
+
+Using percentages like 0% and 100% allows 'parted' to choose the best alignment for the start or end of a partition.
 
 === Quit parted
 
@@ -109,37 +113,53 @@ for the start or end of a partition.
 
 == FILESYSTEMS
 
+Let <boot> be the boot partition's partition file, eg /dev/sda1. Idem for <root> and <swap>.
+Marking partitions with labels is a good way to not make mistakes when invoking a partition in a delicate command.
+
+I'll denote {boot}, {root} and {swap} the labels of each partition.
+
+
 === Find partition numbers
 
 Any of those
 
-    $ fdisk -l /dev/sda      # what partitions already exist?
+    $ fdisk -l <disk>      # what partitions already exist?
     $ blkid     # idem
-    $ parted /dev/sda unit GiB print free     # idem
+    $ parted <disk> unit GiB print free     # idem
 
-=== For the Boot partition
+=== For the Boot partition (if you have one)
 
-    $ mkfs.fat -F32 /dev/sda1
+For the fat partition, choose an all uppercase name with only letters and numbers.
+
+    $ mkfs.fat -F32 <boot>
+    $ fatlabel <boot> {boot}
 
 === For any ext4 partition
 
-    $ mkfs.ext4 /dev/sda2
+    $ mkfs.ext4 -L {root} <root>   # sets the fs and the label
+
+Alternatively, to change a partition's label without formatting it (which the previous command does):
+
+    $ e2label <partition> {new-label}
+
+You need a preexisting ext2/ext3/ext4 system on it first.
 
 === For any swap partition
 
-    $ mkswap -L <label> /dev/sda3
+    $ mkswap -L {swap} <swap>   # idem
 
-=== Name partitions
+=== GPT Name partitions
 
-If GPT:
+If GPT, you can also label partitions with parted:
 
-    $ parted /dev/sda name 2 myArchSys   # 2 is the partition number
+    $ parted <disk> name [boot] {root}
 
-If msdos, for ext2/ext3/ext4 partitions:
-
-    $ e2label /dev/sda3 "myThirdPart"
-    $ e2label /dev/sda4 "myFourthPart"
+But those are special GPT labels, so eg in fstab instead of writing LABEL={root} you'll want to use PARTLABEL={root}
 
 === Checking
 
-Same as always
+Same as always:
+
+    $ fdisk -l <disk>      # what partitions already exist?
+    $ blkid     # idem
+    $ parted <disk> unit GiB print free     # idem

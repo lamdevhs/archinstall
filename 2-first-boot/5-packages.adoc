@@ -1,24 +1,27 @@
 = Part II: first boot -- 5-packages
+:hardbreaks:
 
 Where we install basic useful tools.
 
 
 == SOUND
 
-    $ pacman -S alsa-utils
+    r$ pacman -S alsa-utils
 
 as user:
 
     login: myuser
-    $ alsamixer
+    u$ alsamixer
 
-F6 to select the sound card, Esc to exit, arrow keys to select and modify. try to put everything to "dB gain: 0.0"
+F6 to select the sound card, Esc to exit, arrow keys to select and modify. try to put everything to "dB gain: 0.0".
+M to mute/unmute channels.
 
 If one day you can't play some music, here are some codecs you may try to install. You're still better off waiting for actually needing them. Try perhaps to install vlc before especially, as it ships with many codecs.
 
-    $ pacman -S gstreamer
-    $ pacman -S gst-plugins-{backend,base,base-libs,good,ugly,espeak}
-    $ pacman -S lame faad2 flac gstreamer lib{dca,dv,dvdcss,dvdread,dvdnav,mad,mpeg2,theora,vorbis,xv}
+    r$ pacman -S libmad    # for reading mp3 files
+    r$ pacman -S gstreamer
+    r$ pacman -S gst-plugins-{backend,base,base-libs,good,ugly,espeak}
+    r$ pacman -S lame faad2 flac gstreamer lib{dca,dv,dvdcss,dvdread,dvdnav,mpeg2,theora,vorbis,xv}
 
 main source: https://www.youtube.com/watch?v=6IjdRr1WMSU
 
@@ -29,23 +32,23 @@ log back to root.
 
 packages already previously installed:
 
-    $ pacman -S vim terminus-font ranger elinks lynx
-    $ pacman -S sudo
-    $ pacman -S alsa-utils
+    r$ pacman -S vim terminus-font ranger elinks lynx
+    r$ pacman -S sudo
+    r$ pacman -S alsa-utils
 
 basic very useful command line tools:
 
-    $ pacman -S wget tree
+    r$ pacman -S wget tree
 
 very useful for recovery/disk maintenance:
 
-    $ pacman -S parted testdisk
+    r$ pacman -S parted testdisk
 
 terminal software:
 
-    $ pacman -S cmus  # music player
+    r$ pacman -S cmus  # music player
 
-/!\ in general it fails to start at first.
+/!\ in general it fails to work at first. cf Part III.
 
 
 == CMUS (WIP)

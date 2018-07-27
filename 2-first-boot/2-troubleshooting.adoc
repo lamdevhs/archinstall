@@ -7,22 +7,36 @@ If some things appeared to be wrong during the last step.
 
 if you need to use it again on your new system for some reason, all you'll need to type is
 
-    $ mount -L mysys /mnt
-    $ mount -L myboot /mnt/boot  # if EFI/gpt
-    $ lsblk                      # checking
+    $ mount <root> /mnt
+    $ mount -L {root} /mnt    # alternative with labels
+
+If EFI/GPT, either of those:
+
+    $ mount <boot> /mnt/boot
+    $ mount -L {boot} /mnt/boot
+
+Checking:
+
+    $ lsblk
     $ arch-chroot /mnt
+    !$ echo i am chrooted
 
 
 == NETWORKING
 
 to get temporary access to the internet:
 
-    $ dhcpcd
+    r$ dhcpcd
 
 NOT from the live CD (it won't work), to try to get permanent automatic access to the internet in your new system:
 
-    $ systemctl enable dhcpcd
-    $ systemctl start dhcpcd
+    r$ systemctl enable dhcpcd
+    r$ systemctl start  dhcpcd
+
+Or try that again:
+
+    r$ systemctl enable dhcpcd@<dev>
+    r$ systemctl start dhcpcd@<dev>
 
 
 == CLOCK MADNESS
@@ -30,7 +44,7 @@ NOT from the live CD (it won't work), to try to get permanent automatic access t
 incase the date gets crazy.
 assess the situation:
 
-    $ timedatectl
+    r$ timedatectl
 
 what you want the output to be like, is:
 - the "local time" is supposed to be the time where you are, the time you want `date` to give you
@@ -38,29 +52,30 @@ what you want the output to be like, is:
 - the "RTC time", also called hardware clock (handled, presumably, by the motherboard), MUST be in sync with the UTC time. local time RTC isn't supported.
 - you'll want therefore that "RTC in local TZ" (== hardware clock in local timezone) be "no/false". if it's not the case, use:
 
-    $ timedatectl set-local-rtc false
+    r$ timedatectl set-local-rtc false
 
 once that is done, you'll want to fix the hardware clock, giving it the exact current UTC time found on the net:
 
-    $ hwclock --set --date="20XX-XX-XX XX:XX:XX"
-    $ hwclock --hctosys   # to copy the good UTC value onto the system's recording of UTC time
+    r$ elinks www.time.is/en/UTC    # to get real UTC time
+    r$ hwclock --set --date="20XX-XX-XX XX:XX:XX"
+    r$ hwclock --hctosys   # to copy the good UTC value onto the system's recording of UTC time
 
 then you'll set up the local timezone (which should already be done during the chroot step) via
 
-    $ timedatectl list-timezones | grep Europe # find your TZ
-    $ timedatectl set-timezone Zone/SubZone # eg Europe/Paris
+    r$ timedatectl list-timezones | grep Europe # find your TZ
+    r$ timedatectl set-timezone Zone/SubZone # eg Europe/Paris
 
 reboot is required (?)
 
 to set up automatic internet-based adjustment of system clock:
 
-    $ timedatectl set-ntp true
+    r$ timedatectl set-ntp true
 
 warning: if you use it as normal use (no sudo, no root), the error message is confusing, telling you some stuff isn't provided by any .service file.
 
 checking everything again:
 
-    $ timedatectl
+    r$ timedatectl
 
 don't pay attention to the "System clock synchronized" indicator, i have no idea what it's supposed to do.
 
@@ -70,10 +85,10 @@ don't pay attention to the "System clock synchronized" indicator, i have no idea
 if it lasts more than 45 secs i'd say.
 maybe it's because you enabled 'dhcpcd@.service' instead of 'dhcpcd.service' or 'dhcpcd@<dev>.service'. try disabling it with
 
-    $ systemctl disable dhcpcd@.service
+    r$ systemctl disable dhcpcd@.service
 
 and rebooting.
-the reason is, dhcpcd@ represents a template for any real service of the type dhcpcd@xxxx. it's therefore not a real service, so it hangs up the system at boottime for no reason.
+the reason is, dhcpcd@.service represents a template for any real service of the type dhcpcd@xxxx.service; it's therefore not a real service, so it hangs up the system at boottime for no reason.
 To quote the archwiki
 --------
 Note: Some unit names contain an @ sign (e.g. name@string.service): this means that they are instances of a template unit, whose actual file name does not contain the string part (e.g. name@.service). string is called the instance identifier, and is similar to an argument that is passed to the template unit when called with the systemctl command: in the unit file it will substitute the %i specifier.

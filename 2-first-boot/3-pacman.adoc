@@ -6,7 +6,7 @@ You better have checked you had a viable and unblocked internet connection befor
 
 == CONF
 
-    $ vim /etc/pacman.conf
+    r$ vim /etc/pacman.conf
 
 uncomment the [multilib] lines (not those of testing) to get access to 32bit apps on your 64bit machine; you may also want to uncomment
 
@@ -20,11 +20,11 @@ it's important your clocks be all good and well on time, otherwise you may get s
 
 check internet connection, and read potential recommendations for the upgrade you'll attempt:
 
-    $ elinks www.archlinux.org
+    r$ elinks www.archlinux.org
 
 refresh database and upgrade/downgrade system to match it accordingly
 
-    pacman -Syyuu
+    r$ pacman -Syyuu
 
 better do it at least once a week, esp when you know you'll have at worst a day to fix the potential problems that may arise (friday evening/saturday morning perhaps)
 
@@ -33,27 +33,30 @@ better do it at least once a week, esp when you know you'll have at worst a day 
 
 install
 
-    $ pacman -S xxxx
+    r$ pacman -S xxxx
 
 update database && upgrade system (always together)
 
-    elinks www.archlinux.org    # check out news
-    $ pacman -Syu
+    r$ elinks www.archlinux.org    # check out news
+    r$ pacman -Qu   # list everything that needs to be upgraded
+    r$ pacman -Syu
 
 fully refresh database + upgrade/downgrade system accordingly
 do it esp if you modify /etc/pacman.d/mirrorlist
 
-    elinks www.archlinux.org    # check out news
-    $ pacman -Syyuu
+    r$ elinks www.archlinux.org    # check out news
+    r$ pacman -Syyuu
 
 get info on a package, esp, the optional dependecies
 
-    $ pacman -Si xxxx
-    $ pacman -Qi xxxx   # if the package is already installed
+    r$ pacman -Si xxxx
+    r$ pacman -Qi xxxx   # if the package is already installed
 
 the latter command tells you which optional dependencies are already installed on your machine
 
 find some package
 
-    $ pacman -Ss xxxx   # will tell you if installed
-    $ pacman -Qs xxxx   # works if already installed
+    r$ pacman -Ss xxxx   # will tell you if already installed
+    r$ pacman -Qs xxxx   # to find an already installed package
+
+The query, passive informative commands can be used as normal user without sudo.

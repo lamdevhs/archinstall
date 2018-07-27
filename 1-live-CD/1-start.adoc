@@ -1,12 +1,12 @@
 = Part I: live CD -- 1-start
+:hardbreaks:
 
 You've booted into the Arch live CD and you're at the root prompt.
 Fight troll [y/N]?
 
 == Useful to know
 
-To scroll up/down the console screen: shift + pageup, shift + pagedown
-To switch to another console: alt + leftarrow, alt + rightarrow
+To scroll up/down the console screen: shift + pageup, shift + pagedown. To switch to another console: alt + leftarrow, alt + rightarrow.
 /!\ Warning: switching to another console erases the scrolling history of the current console
 
 == Setting up the environment

@@ -3,59 +3,56 @@
 Time to use arch-chroot, to use commands inside the new system before having rebooted into it.
 
     $ arch-chroot /mnt
+    !$                    # new chroot prompt
 
 /!\ WARNING: the other ttys are not chrooted on the new system, they're still on the live CD
 To remember where you are:
 
-    $ PS1="$PS1 (chroot) "
+    !$ PS1="$PS1 (chroot) "
 
+Special indicators to put in PS1: \W for (full) current workingdir, \u for currently logged-in user.
 
 
 == TIMEZONE
 
-    $ ln -sf /usr/share/zoneinfo/[tab] /etc/localtime
+    !$ ln -sf /usr/share/zoneinfo/[tab] /etc/localtime
 
-the -f option removes /etc/localtime if it exists.
+the -f option allows for replacing /etc/localtime if it exists.
 checking:
 
-    $ ls -l /etc/localtime
-    $ date
+    !$ ls -l /etc/localtime
+    !$ date
 
 
 
 == LOCALE
 
-// **** locale-gen
-// **** localedef --list-archive
-// **** locale
-// **** /etc/locale.conf
-
 uncomment what you want to generate in
 
-    $ vim /etc/locale.gen
+    !$ vim /etc/locale.gen
     en_US ...
     en_GB ...
     fr_FR ...
 
 to check what you did:
 ----
-    $ grep '^[^#]' /etc/locale.gen
+    !$ grep '^[^#]' /etc/locale.gen
 ----
 generate locales
 
-    $ locale-gen
+    !$ locale-gen
 
 check generated locales
 
-    $ localedef --list-archive
+    !$ localedef --list-archive
 
 check current state of locale.conf
 
-    $ locale
+    !$ locale
 
-set up systemwide locale.conf
+set up systemwide locale.conf. example:
 
-    $ vim /etc/locale.conf
+    !$ vim /etc/locale.conf
     LANG=en_US.UTF-8
     LANGUAGE=en_US:en_GB:fr_FR:en
     LC_TIME=en_DK.UTF-8
@@ -64,14 +61,14 @@ set up systemwide locale.conf
 
 or, to keep all the defaults:
 
-    $ locale > /etc/locale.conf
-    $ cat /etc/locale.conf
+    !$ locale > /etc/locale.conf
+    !$ cat /etc/locale.conf
 
 
 
 == CONSOLE
 
-    $ vim /etc/vconsole.conf
+    !$ vim /etc/vconsole.conf
     KEYMAP=fr
     FONT=ter-v20n
 
@@ -81,36 +78,32 @@ those are a permanent version of loadkeys and setfont
 
 == HOSTNAME
 
-    $ echo my-h0st-n4me > /etc/hostname
+    !$ echo my-h0st-n4me > /etc/hostname
 
 best practice: all lowercase, alphadecimal + dash/minus sign only, starts with a letter, or eventually a digit
-
-pretty useful command in general (inaccessible from chroot)
-
-    $ hostnamectl status
 
 
 
 == WIRED CONNECTION
 
 "Both wired and wireless interface names can be found via ls /sys/class/net or ip link. Note that lo is the loop device and not used in making network connections. "
-<dev> symbolizes eth0 or enp3s0 ...
+Let <dev> be the wired device you'll use, eg 'eth0' or 'enp3s0'.
 
-    $ ip link | cut -d: -f2  # to find <dev>
-    $ ip link set <dev> up
+    !$ ip link | cut -d: -f2    # to find <dev>
+    !$ ip link set <dev> up
 
 Checking:
 "The UP in <BROADCAST,MULTICAST,UP,LOWER_UP> is what indicates the interface is up, not the later state DOWN. "
 
-    $ ip link show dev <dev>
-    $ systemctl enable dhcpcd@<dev>   # the .service is implicit
-    $ systemctl status dhcpcd@<dev>.service    # inaccessible when arch-chrooted
+    !$ ip link show dev <dev>
+    !$ systemctl enable dhcpcd@<dev>.service   # the .service is implicit
 
+Note that the '.service' part can be omitted as it is the default.
 
 
 == ROOT PASSWD
 
-    $ passwd
+    !$ passwd
 
 
 
@@ -118,28 +111,28 @@ Checking:
 
 - gpt/EFI version:
 
-    $ grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=grub
+    !$ grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=grub
 
 - msdos/BIOS version: (even on 64bits architecture)
 
-    $ grub-install --target=i386-pc --recheck /dev/sda
+    !$ grub-install --target=i386-pc --recheck  <disk>
 
-the --recheck option is for "deleting device map if it already exists"
+the --recheck option is for "deleting device map if it already exists."
 
 generate config:
 
-    $ grub-mkconfig -o /boot/grub/grub.cfg
+    !$ grub-mkconfig -o /boot/grub/grub.cfg
 
-or write it one yourself...
+or write one yourself...
 
 
 
-== THE END of Part I
+== THE END of Part I: Live CD
 
-exit chroot mode:
+exit chroot and reboot:
 
-    $ exit   # or hit ctrl-D
+    !$ exit   # or hit ctrl-D
+    $ reboot  # or 'shutdown now'
 
-from the live CD:
-
-    $ reboot   # or shutdown now
+Then reboot into the new system.
+Next step: Part II: first boot.

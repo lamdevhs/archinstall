@@ -5,48 +5,50 @@ Create a new user, give it sudo powers
 
 == NEW USER
 
-    $ useradd -mU -G wheel,storage,power -s /bin/bash myuser
+Let <user> be the name of the new normal user you'll create.
+
+    r$ useradd -mU -G wheel,storage,power -s /bin/bash <user>
 
 explanations:
 [-m --create-home] create homedir
-[-U --user-group] create a group with same name as user
+[-U --user-group] create a group with same name as <user>
 alternative to [-U] : [-g users]
 # 'users' group is the default choice for normal user accounts
 [-G] other groups to add the user to
 
 check
 
-    $ grep myuser /etc/passwd /etc/group
+    r$ grep <user> /etc/passwd /etc/group
 
 give it a passwd
 
-    $ passwd myuser
+    r$ passwd <user>
 
 test password
 
-    $ exit
-    login: myuser
+    r$ exit
+    login: <user>
 
 then get back as root for what follows.
 note: if for example you put /bin/zsh as shell for myuser, but it's not installed yet, you get a failed login even with a good passwd, and no other clear evidence of what went wrong.
 to gen better feedback regarding what might be wrong, try from the root prompt
 
-    $ su myuser
+    r$ su <user>
 
-to modify a user
+To modify a user:
 
-    $ usermod -s /bin/bash myuser
+    r$ usermod -s /bin/bash <user>
 
-the options are probably like those of useradd
+The other options are probably like those of useradd
 
 
 == SUDO
 
 as root:
 
-    $ pacman -S sudo
-    $ EDITOR=vi visudo    # if you don't have vim installed
-    $ visudo     # if you have vim installed
+    r$ pacman -S sudo
+    r$ EDITOR=vi visudo    # if you don't have vim installed
+    r$ visudo     # if you have vim installed
 
 uncomment
 
@@ -56,6 +58,6 @@ don't uncomment the similar line below it which contains NOPASSWD
 now anyone in group wheel, like myuser, can use sudo powers
 check
 
-    $ [ctrl+D]
+    r$ [ctrl+D]
     login: myuser
-    $ sudo echo it worked
+    u$ sudo echo it worked

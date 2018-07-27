@@ -1,4 +1,5 @@
 = Part II: first boot -- 1-check
+:hardbreaks:
 
 Check eveything is as you wanted. If some things aren't right, try to read next step 2-troubleshooting.
 
@@ -8,6 +9,13 @@ The first things you find out about are:
 - keyboard layout
 - console font
 
+New system's root prompt will be symbolized with:
+
+    r$ echo hello, world, i am root
+
+Normal user prompt will be:
+
+    u$ echo i am not root user
 
 == GRUB: useful
 
@@ -18,33 +26,32 @@ to halt/reboot computer from grub: type 'c' to get command line mode, then type 
 
 what is mounted, where? including swap
 
-    $ lsblk
-    $ free --mega
-
-is swap available?
+    r$ lsblk
+    r$ free --mega
+    r$ swapon -s
 
 
 == TIMEZONE, LOCALE, HOSTNAME
 
-    $ date    # what time is it, dear?
-    $ locale
-    $ hostnamectl   # very useful command
+    r$ date          # what time is it?
+    r$ locale
+    r$ hostnamectl   # very useful command
 
-    $ timedatectl
+    r$ timedatectl set-ntp true   # network time sync
+    r$ timedatectl
 
-if the output is correct (see 2-troubleshooting), use
+if the output of timedatectl is correct (see 2-troubleshooting), use
 
-    $ hwclock --systohc
+    r$ hwclock --systohc
 
 to copy the system clock onto the hardware clock (provided the system clock is valid) and to generate this file:
 
-    $ cat /etc/adjtime
+    r$ cat /etc/adjtime
 
 
 == NETWORKING
 
-    $ elinks www.archlinux.org      # got the internet?
-    $ ip link                       # is <dev> UP?
-    $ pidof dhcpcd
-    $ systemctl status dhcpcd@<dev> # service active?
-    $ systemctl status dhcpcd@<dev>
+    r$ elinks www.archlinux.org      # got the internet?
+    r$ ip link                       # is <dev> UP?
+    r$ pidof dhcpcd
+    r$ systemctl status dhcpcd@<dev> # service active?
