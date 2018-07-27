@@ -1,4 +1,5 @@
 = Part I: live CD -- 4-chroot
+:hardbreaks:
 
 Time to use arch-chroot, to use commands inside the new system before having rebooted into it.
 

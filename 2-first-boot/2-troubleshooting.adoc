@@ -1,4 +1,5 @@
 = Part II: first boot -- 1-check
+:hardbreaks:
 
 If some things appeared to be wrong during the last step.
 

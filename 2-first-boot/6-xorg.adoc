@@ -1,15 +1,16 @@
 = Part II: first boot -- 6-xorg
+:hardbreaks:
 
 == VIDEO DRIVER
 
 to search for graphical card:
 
-    $ lspci -k | grep -i "VGA"
+    r$ lspci -k | grep -i "VGA"
 
 search for the name of the package in list:
 
-    $ pacman -Ss xf86-video
-    $ pacman -S xf86-video-intel   # if you have an intel graphical card
+    r$ pacman -Ss xf86-video
+    r$ pacman -S xf86-video-intel   # if you have an intel graphical card
 
 for virtualbox cf virtualbox.adoc regarding guest-utils; also don't forget to set up "system/pointing device" to PS/2 in virtualbox settings, before trying on xorg.
 
@@ -19,17 +20,17 @@ for virtualbox cf virtualbox.adoc regarding guest-utils; also don't forget to se
 
 better be sure your system is perfectly upgraded before trying to add xorg. then:
 
-    $ pacman -S xorg-server xorg-xinit
-    $ pacman -S xorg-apps   # optional but very useful
+    r$ pacman -S xorg-server xorg-xinit
+    r$ pacman -S xorg-apps   # optional but very useful
 
 as normal user, you then need to copy:
 ----
-    $ cp /etc/X11/xinit/xinitrc ~/.xinitrc
+    u$ cp /etc/X11/xinit/xinitrc ~/.xinitrc
 ----
 as a template to create your own personalized xorg session, with a DE or WM etc.
 once it is done, you can then start xorg using the simple command (as normal user)
 
-    $ startx
+    u$ startx
 
 
 
@@ -39,8 +40,8 @@ once it is done, you can then start xorg using the simple command (as normal use
 
 to test xorg with the default xinitrc, you need to install:
 
-    $ pacman -S xorg-{twm,xclock} xterm
-    $ startx
+    r$ pacman -S xorg-{twm,xclock} xterm
+    u$ startx
 
 by default, the keyboard layout will be US; use Ctrl-D to kill all the terminals in order to close the xorg session and get back to your console.
 
@@ -64,5 +65,5 @@ as the last line of the file. when you use startx, it'll launch xmonad, along wi
 
 == GUI PACKAGES
 
-firefox: when asked during installation about libx264, choose NOT 10bit (default)
+When asked during installation of firefox, or vlc, etc, about libx264, choose *NOT 10bit* (default)
 

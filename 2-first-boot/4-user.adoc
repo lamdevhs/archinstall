@@ -1,4 +1,5 @@
 = Part II: first boot -- 2-user
+:hardbreaks:
 
 Create a new user, give it sudo powers
 

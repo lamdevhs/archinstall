@@ -1,4 +1,5 @@
 = Part II: first boot -- 2-pacman
+:hardbreaks:
 
 Where you set up basic options for pacman and upgrade your system.
 You better have checked you had a viable and unblocked internet connection beforehand.
